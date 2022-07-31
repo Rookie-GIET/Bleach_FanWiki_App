@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Bleach Fandom</string>
+    <string name="app_logo">App logo</string>
+    <string name="onBoardingImage">OnBoarding Image</string>
+</resources>

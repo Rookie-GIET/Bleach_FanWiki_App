@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BleachApi {
-    @GET("/beach/heroes")
+    @GET("/bleach/heroes")
     suspend fun getAllHeroes( @Query("page") page :Int = 1) : ApiResponse
 
     @GET("/bleach/heroes/search")

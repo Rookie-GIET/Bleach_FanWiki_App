@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.blez.bleachfandom.presentation.screens.home.HomeScreen
 import com.blez.bleachfandom.presentation.screens.splash.SplashScreen
 import com.blez.bleachfandom.presentation.screens.welcome.WelcomeScreen
 import com.blez.bleachfandom.util.Constants.DETAILS_ARGUMENT_KEY
@@ -17,18 +18,18 @@ fun SetupNavGraph(navController: NavHostController)
     {
         composable(route = Screen.Splash.route)
         {
-            WelcomeScreen(navController)
-           /* SplashScreen(navHostController = navController*)*/
+            SplashScreen(navHostController = navController)
         }
         composable(route = Screen.Welcome.route)
         {
             WelcomeScreen(navController)
         }
-        composable(route = Screen.Home.route)
-        {
-
+        composable(route = Screen.Home.route) {
+            HomeScreen(navHostController = navController)
         }
-        composable(route = Screen.Details.route, arguments = listOf(navArgument(DETAILS_ARGUMENT_KEY){
+        composable(
+            route = Screen.Details.route,
+            arguments = listOf(navArgument(DETAILS_ARGUMENT_KEY){
             type = NavType.IntType
         }))
         {

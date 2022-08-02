@@ -2,6 +2,7 @@ package com.blez.bleachfandom.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.blez.bleachfandom.data.local.dao.BleachDatabase
 import com.blez.bleachfandom.util.Constants.BLEACH_DATABASE
 import dagger.Module
@@ -17,8 +18,9 @@ object DatabaseModule {
     @Provides
     @Singleton
    fun provideDatabase(
-       @ApplicationContext context: Context
-   ) = Room.databaseBuilder(context,BleachDatabase::class.java,BLEACH_DATABASE).build()
+       @ApplicationContext context: Context) : BleachDatabase {
+       return Room.databaseBuilder(context,BleachDatabase::class.java,BLEACH_DATABASE).build()
+   }
 
 
 }

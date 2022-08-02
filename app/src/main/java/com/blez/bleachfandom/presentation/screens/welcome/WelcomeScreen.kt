@@ -12,22 +12,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.blez.bleachfandom.Navigation.Screen
 import com.blez.bleachfandom.R
 import com.blez.bleachfandom.domain.model.OnBoardiingPage
 import com.blez.bleachfandom.ui.theme.*
+import com.blez.bleachfandom.util.Constants.LAST_ON_BOARDING_PAGE
 import com.blez.bleachfandom.util.Constants.ON_BOARDING_PAGE_COUNT
 import com.google.accompanist.pager.*
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun WelcomeScreen(navHostController: NavHostController)
+fun WelcomeScreen(navHostController: NavHostController,
+                  welcomeViewModel: WelcomeViewModel = hiltViewModel())
 {
     val pages = listOf(
         OnBoardiingPage.First,
@@ -38,7 +39,9 @@ fun WelcomeScreen(navHostController: NavHostController)
     Column(modifier = Modifier
         .fillMaxSize()
         .background(color = MaterialTheme.colors.welcomeScreenBackgroundColor)) { 
-        HorizontalPager(modifier = Modifier.weight(10f),count =ON_BOARDING_PAGE_COUNT, state = pageState, verticalAlignment = Alignment.Top ) {position ->
+        HorizontalPager(modifier = Modifier.weight(10f),
+            count =ON_BOARDING_PAGE_COUNT, state = pageState,
+            verticalAlignment = Alignment.Top ) {position ->
             PagerScreen(onBoardiingPage = pages[position] )
         }
             HorizontalPagerIndicator(
@@ -53,7 +56,9 @@ fun WelcomeScreen(navHostController: NavHostController)
         FinishButton(
             modifier = Modifier.weight(1f),
             pageState = pageState) {
-            
+            navHostController.popBackStack()
+            navHostController.navigate(Screen.Home.route)
+            welcomeViewModel.saveOnBoardingState(completed = true)
         }
         }
     }
@@ -103,11 +108,14 @@ fun FinishButton(modifier: Modifier,
     verticalAlignment = Alignment.Top,
     horizontalArrangement = Arrangement.Center) {
         AnimatedVisibility(modifier = Modifier.fillMaxWidth(),
-            visible = pageState.currentPage == 2) {
-            Button(onClick = {onClick}, colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White, backgroundColor = MaterialTheme.colors.buttonBackgroundColor
+            visible = pageState.currentPage == LAST_ON_BOARDING_PAGE) {
+            Button(onClick = onClick,
+                colors = ButtonDefaults.buttonColors(
+                contentColor = Color.White,
+                    backgroundColor = MaterialTheme.colors.buttonBackgroundColor
             )) {
                 Text(text = "Finish")
+
             }
             
         }

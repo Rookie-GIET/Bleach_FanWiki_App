@@ -1,35 +1,58 @@
 package com.blez.bleachfandom.presentation.screens.splash
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.window.SplashScreen
+
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.blez.bleachfandom.Navigation.Screen
 import com.blez.bleachfandom.R
-import com.blez.bleachfandom.ui.theme.Purple500
-import com.blez.bleachfandom.ui.theme.Purple700
 
 @Composable
-fun SplashScreen(navHostController: NavHostController){
+fun SplashScreen(navHostController: NavHostController,
+                         splashViewModel: SplashViewModel = hiltViewModel()){
+    val onBoardingCompleted by splashViewModel.onBoardingCompleted.collectAsState()
+    val rotate = remember {
+        Animatable(0f)
+    }
+    LaunchedEffect(key1 = true)
+    {
+        rotate.animateTo(
+            targetValue = 20f,
+            animationSpec = tween(
+                durationMillis = 1000,
+                delayMillis = 200,
+            )
+        )
+        navHostController.popBackStack()
+        if (onBoardingCompleted){
+            navHostController.navigate(Screen.Home.route)
+        }else{
+            navHostController.navigate(Screen.Welcome.route)
+        }
+    }
+    Splash(degree = rotate.value )
 
-    Splash()
+
 }
 
 
 @Composable
-fun Splash()
+ fun Splash(degree : Float)
 {
     if(!isSystemInDarkTheme()) {
         Box(
@@ -41,9 +64,9 @@ fun Splash()
 
 
         ) {
-            Image(
+            Image(modifier = Modifier.rotate(degrees = degree).fillMaxSize(),
                 painter = painterResource(id = R.drawable.ic_hollow_mask_logo),
-                contentDescription = stringResource(R.string.app_logo),contentScale = ContentScale.Crop,modifier = Modifier.fillMaxSize()
+                contentDescription = stringResource(R.string.app_logo),contentScale = ContentScale.Crop,
             )
         }
     }
@@ -57,9 +80,9 @@ fun Splash()
 
 
         ) {
-            Image(
+            Image(modifier = Modifier.rotate(degrees = degree).fillMaxSize(),
                 painter = painterResource(id = R.drawable.ic_hollow_mask_logo),
-                contentDescription = stringResource(R.string.app_logo),contentScale = ContentScale.Crop,modifier = Modifier.fillMaxSize()
+                contentDescription = stringResource(R.string.app_logo),contentScale = ContentScale.Crop,
             )
         }
     }
@@ -68,12 +91,12 @@ fun Splash()
 @Preview
 @Composable
 fun SplashScreenPreview() {
-    Splash()
+    Splash(degree = 20f)
 }
 
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun SplashScreenDarkPreview() {
-    Splash()
+    Splash(degree = 20f)
     
 }

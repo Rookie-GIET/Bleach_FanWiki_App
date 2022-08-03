@@ -1,5 +1,6 @@
 package com.blez.bleachfandom.data.paging_source
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -9,6 +10,8 @@ import com.blez.bleachfandom.data.local.dao.BleachDatabase
 import com.blez.bleachfandom.data.remote.BleachApi
 import com.blez.bleachfandom.domain.model.Hero
 import com.blez.bleachfandom.domain.model.HeroRemoteKeys
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
@@ -16,6 +19,23 @@ class HeroRemoteMediator @Inject constructor(
     private val bleachApi: BleachApi,
     private val bleachDatabase: BleachDatabase
 ) : RemoteMediator<Int, Hero>() {
+
+    override suspend fun initialize(): InitializeAction {
+
+        val currentTime = System.currentTimeMillis()
+        val lastUpdated = heroRemoteKeysDAO.getRemoteKeys(1)?.lastUpdated ?: 0L
+        val cacheTimeout = 5
+        Log.d("RemoteMediator","Current Time : ${parseMillis(currentTime)}")
+        Log.d("RemoteMediator","Last Updated Time : ${parseMillis(lastUpdated)}")
+
+        val diffInMinutes = (currentTime - lastUpdated) / 1000 / 60
+        return if(diffInMinutes.toInt() <=cacheTimeout){
+            Log.d("RemoteMediator","UP TO DATE")
+            InitializeAction.SKIP_INITIAL_REFRESH
+        }else{
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
+    }
 
     private val heroDAO = bleachDatabase.heroDAO()
     private val heroRemoteKeysDAO = bleachDatabase.heroRemoteKeysDAO()
@@ -53,7 +73,8 @@ class HeroRemoteMediator @Inject constructor(
                    HeroRemoteKeys(
                        id = hero.id,
                        prevPage = prevPage,
-                       nextPage =nextPage
+                       nextPage =nextPage,
+                       lastUpdated = response.lastUpdated
                    )
 
                     }
@@ -66,6 +87,11 @@ class HeroRemoteMediator @Inject constructor(
         }catch(e : Exception) {
             return MediatorResult.Error(e)
         }
+    }
+    private fun parseMillis(millis : Long) : String{
+        val date = Date(millis)
+        val format = SimpleDateFormat("yyyy.MM.dd HH:mm",Locale.ROOT)
+        return format.format(date)
     }
 
 

@@ -17,18 +17,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import com.blez.bleachfandom.R
 import com.blez.bleachfandom.ui.theme.NETWORK_ERROR_ICON_HEIGHT
 import com.blez.bleachfandom.ui.theme.SMALL_PADDING
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 @Composable
 fun EmptyScreen(error : LoadState.Error){
     val message by remember {
-        mutableStateOf(parseErrorMessage(message = error.toString()))
+        mutableStateOf(parseErrorMessage(error = error))
     }
     val icon by remember {
         mutableStateOf(R.drawable.ic_network_error)
@@ -66,12 +65,12 @@ fun EmptyScreen(error : LoadState.Error){
     } 
 }
 
-fun parseErrorMessage(message: String): String{
+fun parseErrorMessage(error: LoadState.Error): String{
     return when{
-        message.contains("SocketTimeoutException") ->{
+        error.error is SocketTimeoutException ->{
             "Sever Unavailable"
         }
-        message.contains("ConnectException") ->{
+        error.error is ConnectException ->{
             "Internet Unavailable"
         }
         else -> {

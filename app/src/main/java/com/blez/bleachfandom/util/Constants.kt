@@ -14,6 +14,8 @@ object Constants {
     const val PREFERENCES_KEY = "on_boarding_completed"
     const val ITEMS_PER_PAGE = 3
     val NAME_PLACEHOLDER_HEIGHT = 30.dp
+    val TOP_APP_BAR_HEIGHT = 56.dp
+
 
 
 }

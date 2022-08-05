@@ -6,6 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.blez.bleachfandom.data.local.dao.BleachDatabase
 import com.blez.bleachfandom.data.paging_source.HeroRemoteMediator
+import com.blez.bleachfandom.data.paging_source.SearchHeroesSource
 import com.blez.bleachfandom.data.remote.BleachApi
 import com.blez.bleachfandom.domain.model.Hero
 import com.blez.bleachfandom.util.Constants.ITEMS_PER_PAGE
@@ -27,7 +28,12 @@ class RemoteDataSourceImpl(
 
     }
 
-    override fun searchHeroes(): Flow<PagingData<Hero>> {
-        TODO("Not yet implemented")
+    override fun searchHeroes(query: String): Flow<PagingData<Hero>> {
+       return Pager(
+           config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+           pagingSourceFactory = {
+               SearchHeroesSource(bleachApi = bleachApi, query = query)
+           }
+       ).flow
     }
 }

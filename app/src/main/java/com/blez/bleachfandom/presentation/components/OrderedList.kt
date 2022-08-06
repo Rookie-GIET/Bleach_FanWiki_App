@@ -11,6 +11,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.blez.bleachfandom.ui.theme.MEDIUM_PADDING
 import com.blez.bleachfandom.ui.theme.SMALL_PADDING
 import com.blez.bleachfandom.ui.theme.titleColor
 
@@ -41,7 +42,7 @@ fun OrderedList(
             items.forEachIndexed { index, item ->
                 Text(
                     modifier = Modifier.alpha(ContentAlpha.medium),
-                    text = "${index + 1}.$item",
+                    text = "$$item",
                     color = textColor,
                     fontSize = MaterialTheme.typography.body1.fontSize,
                 )

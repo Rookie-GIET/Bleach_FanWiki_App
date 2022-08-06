@@ -174,13 +174,15 @@ fun BottomSheetContent(
         Row(modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(scrollState)
-            .padding(end = SMALL_PADDING)
+            .padding(end = MEDIUM_PADDING)
         , horizontalArrangement = Arrangement.SpaceBetween) {
 
+                Column(modifier = Modifier.padding(end = MEDIUM_PADDING)) {
+                    OrderedList(title = stringResource(R.string.family),
+                        items = selectedHero.family,
+                        textColor = contentColor)
+                }
 
-                OrderedList(title = stringResource(R.string.family),
-                    items = selectedHero.family,
-                   textColor = contentColor)
 
 
             OrderedList(title = stringResource(R.string.abilities),

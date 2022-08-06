@@ -15,6 +15,9 @@ object Constants {
     const val ITEMS_PER_PAGE = 3
     val NAME_PLACEHOLDER_HEIGHT = 30.dp
     val TOP_APP_BAR_HEIGHT = 56.dp
+    val MIN_SHEET_SIZE = 140.dp
+    const val ABOUT_TEXT_MAX_LINES = 7
+    const val MIN_BACKGROUND_IMAGE_HEIGHT = 0.4f
 
 
 

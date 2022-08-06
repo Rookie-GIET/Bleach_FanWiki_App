@@ -1,9 +1,9 @@
 package com.blez.bleachfandom.presentation.screens.home
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,6 +13,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.annotation.ExperimentalCoilApi
 import com.blez.bleachfandom.Navigation.Screen
 import com.blez.bleachfandom.presentation.common.ListContent
+import com.blez.bleachfandom.ui.theme.statusBarColor
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 @OptIn(ExperimentalCoilApi::class)
@@ -22,7 +24,11 @@ fun HomeScreen(
     navHostController: NavHostController
 ){
     val allHeroes = homeViewModel.getAllHeroes.collectAsLazyPagingItems()
-    Scaffold(
+    val systemUIcontroller = rememberSystemUiController()
+    systemUIcontroller.setStatusBarColor(
+        color = MaterialTheme.colors.statusBarColor
+    )
+         Scaffold(
         topBar = {
             HomeTopBar(onSearchClicked = {
                 navHostController.navigate(Screen.Search.route)

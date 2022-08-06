@@ -65,7 +65,7 @@ fun SplashScreen(navHostController: NavHostController,
 
         ) {
             Image(modifier = Modifier.rotate(degrees = degree).fillMaxSize(),
-                painter = painterResource(id = R.drawable.ic_hollow_mask_logo),
+                painter = painterResource(id = R.drawable.hollow_mask),
                 contentDescription = stringResource(R.string.app_logo),contentScale = ContentScale.Crop,
             )
         }
@@ -81,7 +81,7 @@ fun SplashScreen(navHostController: NavHostController,
 
         ) {
             Image(modifier = Modifier.rotate(degrees = degree).fillMaxSize(),
-                painter = painterResource(id = R.drawable.ic_hollow_mask_logo),
+                painter = painterResource(id = R.drawable.hollow_mask),
                 contentDescription = stringResource(R.string.app_logo),contentScale = ContentScale.Crop,
             )
         }

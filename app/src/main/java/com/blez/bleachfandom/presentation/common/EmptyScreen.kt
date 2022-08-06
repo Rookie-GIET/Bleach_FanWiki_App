@@ -4,6 +4,8 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -18,14 +20,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import com.blez.bleachfandom.R
+import com.blez.bleachfandom.domain.model.Hero
 import com.blez.bleachfandom.ui.theme.NETWORK_ERROR_ICON_HEIGHT
 import com.blez.bleachfandom.ui.theme.SMALL_PADDING
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 @Composable
-fun EmptyScreen(error : LoadState.Error? = null){
+fun EmptyScreen(error : LoadState.Error? = null,
+                heroes : LazyPagingItems<Hero>? = null
+){
     var message by remember {
         mutableStateOf("Find Your Favourite Hero!")
     }
@@ -47,26 +55,40 @@ fun EmptyScreen(error : LoadState.Error? = null){
     {
         startAnim = true
     }
+    var isRefreshing by remember { mutableStateOf(false)}
+
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+        onRefresh = {
+            isRefreshing = true
+            heroes?.refresh()
+            isRefreshing = false
+        },
+            swipeEnabled = error!=null) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(modifier = Modifier
+                .size(NETWORK_ERROR_ICON_HEIGHT)
+                .alpha(alpha = alphaAnim),painter = painterResource(id = icon ) , contentDescription = stringResource(id = R.string.network_error_icon),
+                tint = if (isSystemInDarkTheme()) Color.LightGray else Color.DarkGray)
+            Text(modifier = Modifier
+                .padding(all = SMALL_PADDING)
+                .alpha(alpha = alphaAnim),
+                text = message,
+                fontSize = MaterialTheme.typography.subtitle1.fontSize,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                color = if (isSystemInDarkTheme()) Color.LightGray else Color.DarkGray )
 
 
-    Column(
-        Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(modifier = Modifier.size(NETWORK_ERROR_ICON_HEIGHT)
-            .alpha(alpha = alphaAnim),painter = painterResource(id = icon ) , contentDescription = stringResource(id = R.string.network_error_icon),
-        tint = if (isSystemInDarkTheme()) Color.LightGray else Color.DarkGray)
-        Text(modifier = Modifier.padding(all = SMALL_PADDING)
-            .alpha(alpha = alphaAnim),
-            text = message,
-        fontSize = MaterialTheme.typography.subtitle1.fontSize,
-        fontWeight = FontWeight.Medium,
-        textAlign = TextAlign.Center,
-        color = if (isSystemInDarkTheme()) Color.LightGray else Color.DarkGray )
+        }
 
+    }
 
-    } 
 }
 
 fun parseErrorMessage(error: LoadState.Error): String{

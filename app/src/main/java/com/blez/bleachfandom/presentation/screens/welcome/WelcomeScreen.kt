@@ -54,8 +54,8 @@ fun WelcomeScreen(navHostController: NavHostController,
             indicatorWidth = PAGING_INDICATOR_WIDTH ,
             indicatorHeight = PAGING_INDICATOR_SPACING)
         FinishButton(
-            modifier = Modifier.weight(1f),
-            pageState = pageState) {
+            pageState = pageState
+        ) {
             navHostController.popBackStack()
             navHostController.navigate(Screen.Home.route)
             welcomeViewModel.saveOnBoardingState(completed = true)
@@ -100,9 +100,9 @@ fun PagerScreen(onBoardiingPage: OnBoardiingPage){
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FinishButton(modifier: Modifier,
-   pageState : PagerState,
-   onClick:() -> Unit,
+fun FinishButton(
+    pageState: PagerState,
+    onClick: () -> Unit,
 ){
     Row(modifier = Modifier.padding(horizontal = EXTRA_LARGE_PADDING),
     verticalAlignment = Alignment.Top,
